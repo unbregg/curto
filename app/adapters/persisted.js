@@ -1,6 +1,7 @@
 import DS from 'ember-data';
+import BuildUrlMixin from '../mixins/build-url';
 
-export default DS.RESTAdapter.extend({
+export default DS.RESTAdapter.extend(BuildUrlMixin, {
   /**
    * Handle Business Error
    * @param jqXHR
