@@ -65,5 +65,50 @@ export default DS.RESTAdapter.extend(BuildUrlMixin, {
       data[this.pathForType(type.typeKey)] = records;
     }
     return data;
+  },
+  /**
+   * findOne
+   * @param store
+   * @param type
+   * @param query
+   * @returns {*}
+   */
+  findOne(store, type, query) {
+    var url = this.buildURL(type.typeKey, null, null, 'resourceOperation', 'findOne');
+    if (this.sortQueryParams) {
+      query = this.sortQueryParams(query);
+    }
+    return this.ajax(url, 'GET', { data: query});
+  },
+  /**
+   *
+   * @param store
+   * @param type
+   * @param id
+   * @param snapshot
+   * @returns {*}
+   */
+  isExists(store, type, id, snapshot) {
+    return this.ajax(this.buildURL(type.typeKey, id, snapshot, 'recordOperation', 'exists'), 'GET');
+  },
+  /**
+   *
+   * @param store
+   * @param type
+   * @param query
+   * @returns {*}
+   */
+  count(store, type, query) {
+    return this.ajax(this.buildURL(type.typeKey, null, null, 'resourceOperation', 'count'), 'GET', {data: query});
+  },
+  /**
+   * TODO should it be called in store?
+   * @param store
+   * @param type
+   * @param field
+   * @returns {*}
+   */
+  uniqueness(store, type, field) {
+    return this.ajax(this.buildURL(type.typeKey, null, null, 'resourceOperation', field + '/uniqueness'), 'GET');
   }
 });

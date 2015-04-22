@@ -43,5 +43,33 @@ export default DS.Store.extend({
 
     var promise = _bulkUpdate(adapter, this, type, records);
     return promise;
+  },
+  /**
+   *
+   * @param typeName
+   * @param query
+   */
+  findOne(typeName, query) {
+    var type = this.modelFor(typeName);
+
+    var adapter = this.adapterFor(type);
+  },
+  /**
+   *
+   */
+  isExists() {
+    var type = this.modelFor(typeName);
+
+    var adapter = this.adapterFor(type);
+  },
+  /**
+   * TODO
+   * cache count with query ?
+   * save in metadata
+   */
+  count() {
+    var type = this.modelFor(typeName);
+
+    var adapter = this.adapterFor(type);
   }
 });
