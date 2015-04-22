@@ -1,5 +1,6 @@
 import DS from 'ember-data';
 import BuildUrlMixin from '../mixins/build-url';
+import Ember from 'ember';
 
 export default DS.RESTAdapter.extend(BuildUrlMixin, {
   /**

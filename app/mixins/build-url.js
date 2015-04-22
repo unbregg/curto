@@ -1,8 +1,9 @@
 import DS from 'ember-data';
+import Ember from 'ember';
 
 var BuildURLMixin = DS.BuildURLMixin;
 export default Ember.Mixin.create(BuildURLMixin, {
-  buildURL(type, id, snapshot, requestType,operation) {
+  buildURL(type, id, snapshot, requestType, operation) {
     switch (requestType) {
       case 'find':
         return this.urlForFind(id, type, snapshot);
@@ -21,9 +22,9 @@ export default Ember.Mixin.create(BuildURLMixin, {
       case 'deleteRecord':
         return this.urlForDeleteRecord(id, type, snapshot);
       case 'resourceOperation':
-        return this.urlForResourceOperation(type,operation);
+        return this.urlForResourceOperation(type, operation);
       case 'recordOperation':
-        return this.urlForRecordOperation(id, type, snapshot,operation);
+        return this.urlForRecordOperation(id, type, snapshot, operation);
       default:
         return this._buildURL(type, id);
     }
@@ -48,9 +49,10 @@ export default Ember.Mixin.create(BuildURLMixin, {
   urlForRecordOperation: function (id, type, snapshot, operation) {
     return this._buildURL(type, id) + '/' + operation;
   },
-  headers() {
+
+  headers: Ember.computed('serializerType', function () {
     return {
       'X-Serializer-Type': this.get('serializerType')
     };
-  }.property('serializerType')
+  })
 });

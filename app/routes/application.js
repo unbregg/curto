@@ -25,10 +25,10 @@ export default
       var segments = [];
       if (Ember.FEATURES.isEnabled('ember-document-title')) {
         tokens = tokens.uniq().pop().split('.');
-        if (tokens[tokens.length - 1] == 'index') {
+        if (tokens[tokens.length - 1] === 'index') {
           tokens.pop();
         }
-        if (tokens[0] == 'main') {
+        if (tokens[0] === 'main') {
           tokens.shift();
         }
         //filter main
@@ -107,11 +107,11 @@ export default
        @method actions.sessionInvalidationFailed
        @param {any} error The error the promise returned by the authenticator rejects with, see [`Authenticators.Base#invalidate`](#SimpleAuth-Authenticators-Base-invalidate)
        */
-      sessionInvalidationFailed(error) {
+      sessionInvalidationFailed(/*error*/) {
         //TODO
       },
 
-      httpError(e, xhr, options, thrownError) {
+      httpError(/*e, xhr, options, thrownError*/) {
         console.log("httpError catch");
       },
       openPopup(yieldName) {
@@ -133,13 +133,13 @@ export default
       },
       closePopup() {
         var popups = this.get('popups');
-        Ember.assert('Can not close popup without any popup exists', popups.length != 0);
+        Ember.assert('Can not close popup without any popup exists', popups.length !== 0);
         var popItem = popups.pop();
         Ember.sendEvent(popItem.controller, 'exit', params);
         var lastConfig = popups[popups.length - 1];
         this.disconnectOutlet({
           outlet: 'popup',
-          parentView: popups.length == 0 ? 'application' : lastConfig.dialogName
+          parentView: popups.length === 0 ? 'application' : lastConfig.dialogName
         });
       },
       ensure() {
@@ -150,7 +150,7 @@ export default
         var name = this.pathForPopup(yieldName);
 
         var popups = this.get('popups');
-        Ember.assert('Can not open sub popup in the root,it must be opened by parent popup', popups.length != 0);
+        Ember.assert('Can not open sub popup in the root,it must be opened by parent popup', popups.length !== 0);
         //get from last one
         var lastConfig = popups[popups.length - 1];
         var controller = this.controllerFor(name);
