@@ -1,15 +1,13 @@
 /**
  * Created by jiangwy on 15-4-22.
  */
+import Ember from 'ember';
 import {
   _bind,
   _guard,
-  _objectIsAlive
-  } from "ember-data/system/store/common";
-
-import {
+  _objectIsAlive,
   serializerForAdapter
-  } from "ember-data/system/store/serializers";
+  } from "./ember-data-common";
 
 export function _bulkDelete(adapter, store, type, ids, records) {
   var snapshots = Ember.A(records).invoke('_createSnapshot');
