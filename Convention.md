@@ -2,7 +2,7 @@
 >**声明：该说明文档详细说明了系统提供的基础功能模块，前端与后端REST请求规范，前端与后端数据通信格式标准，以及前端和后端统一查询参数，基于Ember-Data的扩展等等功能，随着技术功能的增长以及变化，该文档会随之发生改变**
 ***
 >开发声明：约定了前后端的数据、REST、查询参数等约定，需要后端实现对应技术要点
->数据通讯说明：该文档所描述的数据通讯非标准规范定义，如果需要实现OASIS所规定的[OData](www.odata.org)标准，可以参考详细`OData`说明
+>数据通讯说明：该文档所描述的数据通讯非标准规范定义，如果需要实现OASIS所规定的[OData](https://www.odata.org)标准，可以参考详细`OData`说明
 
 #### 目录结构
 ```
@@ -47,7 +47,7 @@ app
 │   ├── platform.js
 │   ├── flow.js
 │   └── other route meta...
-├──services
+├── services?
 ├── routes
 │   ├── application.js
 │   ├── dashboard.js
@@ -57,7 +57,7 @@ app
 │   └── app.css
 ├── templates
 │   ├── components
-│   ├── member-permissions
+│   ├── popups
 │   │   ├── list.hbs
 │   │   ├── confirm.hbs
 │   │   └── tree.hbs
@@ -166,7 +166,7 @@ buildURL(type, id, snapshot, requestType, operation) {
 ##### Many-To-Many(through)
 > Todo
 
-- 支持多对多的关联关系的增删该查
+- 支持多对多的关联关系的增删改查
 ```javascript
 App.Patient = DS.Model.extend({
     physicals:hasMany('physical',{through:'appointment'})
@@ -194,7 +194,7 @@ metadata:{
    success:{
        message:'something tips',
        code:10020,
-       moreIfo:'http://example.com/errors/10020'
+       moreInfo:'http://example.com/errors/10020'
    }
 }
 ```
@@ -202,16 +202,18 @@ metadata:{
 > Todo
 
 - 默认的实现不能支持分页获取一对多数据
+
 ##### Pagination With Filter
 > Todo
 
 #### 路由视图状态保存
 > Todo
 
+- 优先考虑增强路由具备挂起和恢复功能，从视图角度入手暂时非优先考虑
 #### 组件
 ##### 模态框
 - 统一的调用方式
-- 感知触发源的存在，并且能够与触发源相处通讯
+- 感知触发源的存在，并且能够与触发源相互通讯
 - 无限层级模态框
 ```html
 list 要调用的模态框
