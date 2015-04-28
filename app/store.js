@@ -1,4 +1,5 @@
 import DS from 'ember-data';
+import Ember from 'ember';
 import {
   _bulkDelete,
   _bulkCreate,
@@ -12,47 +13,50 @@ import {
   } from './utils/ember-data-finders';
 import {
   promiseObject,
-  //promiseArray,
+  promiseArray,
   //promiseManyArray
   } from './utils/ember-data-common';
 
+var get=Ember.get;
 
 export default DS.Store.extend({
   /**
-   * TODO
-   * @param type
-   * @param ids
+   * 批量删除一组模型.
+   * 如 store.bulkDelete('user',users);
    * @param records
    */
-    bulkDelete(type, ids, records) {
-    var adapter = this.adapterFor(type);
+    bulkDelete(records) {
+    var adapter, typeName = get(records, 'firstObject.typeKey');
+    Ember.assert('BulkOperation: Invalid Arguments', typeName);
+    adapter = this.adapterFor(typeName);
 
-    var promise = _bulkDelete(adapter, this, type, ids, records);
-    return promise;
+    return promiseArray(_bulkDelete(adapter, this, typeName, records));
   },
   /**
-   * TODO
-   * @param type
+   * 批量新建一组模型
+   * 如 store.bulkCreate('user',users);
    * @param records
    * @returns {*}
    */
-    bulkCreate(type, records) {
-    var adapter = this.adapterFor(type);
+    bulkCreate(records) {
+    var adapter, typeName = get(records, 'firstObject.typeKey');
+    Ember.assert('BulkOperation: Invalid Arguments', typeName);
+    adapter = this.adapterFor(typeName);
 
-    var promise = _bulkCreate(adapter, this, type, records);
-    return promise;
+    return promiseArray(_bulkCreate(adapter, this, typeName, records));
   },
   /**
-   * TODO
-   * @param type
+   * 批量更新一组模型
+   * 如 store.bulkUpdate('user',users);
    * @param records
    * @returns {*}
    */
-    bulkUpdate(type, records) {
-    var adapter = this.adapterFor(type);
+    bulkUpdate(records) {
+    var adapter, typeName = get(records, 'firstObject.typeKey');
+    Ember.assert('BulkOperation: Invalid Arguments', typeName);
+    adapter = this.adapterFor(typeName);
 
-    var promise = _bulkUpdate(adapter, this, type, records);
-    return promise;
+    return _bulkUpdate(adapter, this, typeName, records);
   },
 
   /**

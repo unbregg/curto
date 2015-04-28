@@ -24,11 +24,11 @@ export default DS.RESTAdapter.extend(BuildUrlMixin, {
    * Bulk Delete
    * @param store
    * @param type
-   * @param ids
    * @param snapshots
    * @returns {*}
    */
-    bulkDelete(store, type, ids, snapshots) {
+    bulkDelete(store, type, snapshots) {
+    var ids = snapshots.mapBy('id');
     return this.ajax(this.buildURL(type.typeKey, ids, snapshots, 'resourceOperation', 'bulkDelete'), 'DELETE', {data: {ids: ids}});
   },
   /**
