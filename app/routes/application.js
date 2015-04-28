@@ -135,7 +135,8 @@ export default
         var popups = this.get('popups');
         Ember.assert('Can not close popup without any popup exists', popups.length !== 0);
         var popItem = popups.pop();
-        Ember.sendEvent(popItem.controller, 'exit', params);
+        //TODO 退出事件的params参数
+        Ember.sendEvent(popItem.controller, 'exit'/*, params*/);
         var lastConfig = popups[popups.length - 1];
         this.disconnectOutlet({
           outlet: 'popup',
@@ -165,9 +166,9 @@ export default
       logout() {
 //      this.send('openPopup', 'confirm');
 
-        var container = this.container;
-        var app = container.lookup('application:main');
-        this.send('invalidateSession');
+        //var container = this.container;
+        //var app = container.lookup('application:main');
+        //this.send('invalidateSession');
         //TODO
       }
     }

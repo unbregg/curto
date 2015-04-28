@@ -1,3 +1,4 @@
+/* jshint -W079 */
 import Ember from 'ember';
 import {
   _bind,
@@ -5,6 +6,8 @@ import {
   _objectIsAlive,
   serializerForAdapter
   } from "./ember-data-common";
+
+var Promise=Ember.RSVP.Promise;
 
 export function _findOne(adapter, store, type, query) {
   var promise = adapter.findOne(store, type, query);
@@ -21,4 +24,14 @@ export function _findOne(adapter, store, type, query) {
 
     return store.push(type, payload);
   }, null, "DS: Extract payload of findOne " + type);
+}
+
+
+export function _count(adapter, store, type, query) {
+  return adapter.count(store, type, query);
+}
+
+
+export function _isExists(adapter, store, type, id) {
+  return adapter.isExists(store, type, id);
 }

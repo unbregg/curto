@@ -1,4 +1,3 @@
-import Ember from 'ember';
 import DS from 'ember-data';
 import {
   _bulkDelete,
@@ -6,7 +5,11 @@ import {
   _bulkUpdate
   } from './utils/bulkers';
 
-import {_findOne} from './utils/ember-data-finders';
+import {
+  _findOne,
+  _count,
+  _isExists
+  } from './utils/ember-data-finders';
 import {
   promiseObject,
   //promiseArray,
@@ -21,7 +24,7 @@ export default DS.Store.extend({
    * @param ids
    * @param records
    */
-  bulkDelete(type, ids, records) {
+    bulkDelete(type, ids, records) {
     var adapter = this.adapterFor(type);
 
     var promise = _bulkDelete(adapter, this, type, ids, records);
@@ -33,7 +36,7 @@ export default DS.Store.extend({
    * @param records
    * @returns {*}
    */
-  bulkCreate(type, records) {
+    bulkCreate(type, records) {
     var adapter = this.adapterFor(type);
 
     var promise = _bulkCreate(adapter, this, type, records);
@@ -45,7 +48,7 @@ export default DS.Store.extend({
    * @param records
    * @returns {*}
    */
-  bulkUpdate(type, records) {
+    bulkUpdate(type, records) {
     var adapter = this.adapterFor(type);
 
     var promise = _bulkUpdate(adapter, this, type, records);
@@ -65,29 +68,31 @@ export default DS.Store.extend({
    * @param query
    * @returns {*}
    */
-  findOne(typeName, query) {
+    findOne(typeName, query) {
     var type = this.modelFor(typeName);
     var adapter = this.adapterFor(type);
     return promiseObject(_findOne(adapter, this, type, query));
   },
 
   /**
-   *
+   *校验指定id的模型是否存在
+   * 如 store.isExists('user',1);
+   * 则会向接口/users/1/exists发起请求,验证id为1的user是否存在
    */
-  isExists() {
+    isExists(typeName, id) {
     var type = this.modelFor(typeName);
-
     var adapter = this.adapterFor(type);
+    return promiseObject(_isExists(adapter, this, type, id));
   },
 
   /**
-   * TODO
-   * cache count with query ?
-   * save in metadata
+   * 获取模型对象总数,
+   * 如 store.count('user');
+   * 则会向/users/count发起请求,获取user总数
    */
-  count() {
+    count(typeName, query) {
     var type = this.modelFor(typeName);
-
     var adapter = this.adapterFor(type);
+    return promiseObject(_count(adapter, this, type, query));
   }
 });

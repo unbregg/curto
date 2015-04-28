@@ -1,6 +1,4 @@
-/**
- * Created by jiangwy on 15-4-22.
- */
+/* jshint undef: true, unused: false */
 import Ember from 'ember';
 import {
   _bind,
@@ -16,7 +14,7 @@ export function _bulkDelete(adapter, store, type, ids, records) {
 
 }
 
-export function _bulkdCreate(adapter, store, type, records) {
+export function _bulkCreate(adapter, store, type, records) {
   var snapshots = Ember.A(records).invoke('_createSnapshot');
   var promise = adapter.bulkDelete(store, type, snapshots);
   //TODO

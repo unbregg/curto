@@ -1,3 +1,6 @@
+/* jshint undef: true, unused: false */
+
+
 import DS from 'ember-data';
 import BuildUrlMixin from '../mixins/build-url';
 import Ember from 'ember';
@@ -8,7 +11,7 @@ export default DS.RESTAdapter.extend(BuildUrlMixin, {
    * @param jqXHR
    * @returns {*}
    */
-  ajaxError(jqXHR) {
+    ajaxError(jqXHR) {
     var error = this._super(...arguments);
 
     if (jqXHR && jqXHR.status === 422) {
@@ -25,8 +28,8 @@ export default DS.RESTAdapter.extend(BuildUrlMixin, {
    * @param snapshots
    * @returns {*}
    */
-  bulkDelete(store, type, ids, snapshots) {
-    return this.ajax(this.buildURL(type.typeKey, ids, snapshots, 'resourceOperation', 'bulkDelete'), 'DELETE', { data: { ids: ids }});
+    bulkDelete(store, type, ids, snapshots) {
+    return this.ajax(this.buildURL(type.typeKey, ids, snapshots, 'resourceOperation', 'bulkDelete'), 'DELETE', {data: {ids: ids}});
   },
   /**
    *
@@ -35,10 +38,10 @@ export default DS.RESTAdapter.extend(BuildUrlMixin, {
    * @param snapshots
    * @returns {*}
    */
-  bulkCreate(store, type, snapshots) {
+    bulkCreate(store, type, snapshots) {
     var serializer = store.serializerFor(type.typeKey);
     var data = this._serializeIntoHash(serializer, type, snapshots);
-    return this.ajax(this.buildURL(type.typeKey, null, snapshots, 'resourceOperation', 'bulkCreate'), 'POST', { data: data});
+    return this.ajax(this.buildURL(type.typeKey, null, snapshots, 'resourceOperation', 'bulkCreate'), 'POST', {data: data});
   },
   /**
    *
@@ -47,20 +50,20 @@ export default DS.RESTAdapter.extend(BuildUrlMixin, {
    * @param snapshots
    * @returns {*}
    */
-  bulkUpdate(store, type, snapshots) {
+    bulkUpdate(store, type, snapshots) {
     var serializer = store.serializerFor(type.typeKey);
     var data = this._serializeIntoHash(serializer, type, snapshots);
-    return this.ajax(this.buildURL(type.typeKey, null, snapshots, 'resourceOperation', 'bulkUpdate'), 'PUT', { data: data});
+    return this.ajax(this.buildURL(type.typeKey, null, snapshots, 'resourceOperation', 'bulkUpdate'), 'PUT', {data: data});
   },
   /**
    * @private
    */
-  _serializeIntoHash: function (serializer, type, snapshots) {
+    _serializeIntoHash(serializer, type, snapshots) {
     var data = {};
     if (Ember.isArray(snapshots) && Ember.isPresent(snapshots)) {
       var records = snapshots.map((snapshot)=> {
         var json = {};
-        serializer.serializeIntoHash(json, type, snapshot, { includeId: true });
+        serializer.serializeIntoHash(json, type, snapshot, {includeId: true});
         return json;
       });
       data[this.pathForType(type.typeKey)] = records;
@@ -74,12 +77,12 @@ export default DS.RESTAdapter.extend(BuildUrlMixin, {
    * @param query
    * @returns {*}
    */
-  findOne(store, type, query) {
+    findOne(store, type, query) {
     var url = this.buildURL(type.typeKey, null, null, 'resourceOperation', 'findOne');
     if (this.sortQueryParams) {
       query = this.sortQueryParams(query);
     }
-    return this.ajax(url, 'GET', { data: query});
+    return this.ajax(url, 'GET', {data: query});
   },
   /**
    *
@@ -89,7 +92,7 @@ export default DS.RESTAdapter.extend(BuildUrlMixin, {
    * @param snapshot
    * @returns {*}
    */
-  isExists(store, type, id, snapshot) {
+    isExists(store, type, id, snapshot) {
     return this.ajax(this.buildURL(type.typeKey, id, snapshot, 'recordOperation', 'exists'), 'GET');
   },
   /**
@@ -99,17 +102,16 @@ export default DS.RESTAdapter.extend(BuildUrlMixin, {
    * @param query
    * @returns {*}
    */
-  count(store, type, query) {
+    count(store, type, query) {
     return this.ajax(this.buildURL(type.typeKey, null, null, 'resourceOperation', 'count'), 'GET', {data: query});
   },
   /**
    * TODO should it be called in store?
-   * @param store
    * @param type
    * @param field
    * @returns {*}
    */
-  uniqueness(store, type, field) {
+    uniqueness(type, field) {
     return this.ajax(this.buildURL(type.typeKey, null, null, 'resourceOperation', field + '/uniqueness'), 'GET');
   }
 });
