@@ -15,6 +15,7 @@ module.exports = function (app) {
     res.send({
       'userModels':req.body
     });
+    //res.status(200).end();
   });
 
   userRouter.get('/', function (req, res) {

@@ -33,17 +33,14 @@ test("bulk create", function (assert) {
   });
 
   andThen(function () {
-    store.bulkCreate([user1, user2, user3]).then(function (users) {
-      //user.get('123');
-      //user.get('123');
-      //user.get('123222');
-      assert.ok(true);
-    }).catch(function (e) {
+    store.bulkCreate([user1, user2, user3]).then(function (/*users*/) {
+      assert.ok(false);
+    }).catch(function () {
       assert.ok(false);
     });
 
     assert.equal(user1.get('isLoaded'), true);
-    assert.equal(user1.get('isDirty'), false, 'The Record With BulkCreate Status Must Not Be Dirty');
+    assert.equal(user1.get('isDirty'), false);
 
   });
 
@@ -57,23 +54,38 @@ test("bulk update", function (assert) {
   Ember.run(function () {
     user1 = store.push('userModel', {id: '1', name: '111'});
     user2 = store.push('userModel', {id: '2', name: '222'});
+    user1.set('name','jone');
+    user2.set('name','tom');
   });
 
   andThen(function () {
-    store.bulkUpdate([user1, user2]).then(function (users) {
-      //user.get('123');
-      //user.get('123');
-      //user.get('123222');
+    store.bulkUpdate([user1, user2]).then(function (/*users*/) {
       assert.ok(true);
+      assert.equal(user1.get('isLoaded'), true);
+      assert.equal(user1.get('isDirty'), false);
+      assert.equal(user1.get('name'),'processed');
     }).catch(function (e) {
       console.error(e);
       assert.ok(false);
     });
+  });
+});
 
-    assert.equal(user1.get('isLoaded'), true);
-    assert.equal(user1.get('isDirty'), false, 'The Record With bulkUpdate Status Must Not Be Dirty');
-    assert.equal(user1.get('name'),'processed');
 
+test("bulk delete", function (assert) {
+  assert.expect(1);
+  var user1, user2;
+
+  Ember.run(function () {
+    user1 = store.push('userModel', {id: '1', name: '111'});
+    user2 = store.push('userModel', {id: '2', name: '222'});
+    user1.set('name','jone');
+    user2.set('name','tom');
   });
 
+  andThen(function () {
+    store.bulkDelete([user1, user2]).then(function (/*users*/) {
+      assert.ok(true);
+    });
+  });
 });

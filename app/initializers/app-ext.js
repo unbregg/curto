@@ -1,5 +1,22 @@
 import DS from 'ember-data';
 import Ember from 'ember';
+var jQuery=Ember.$;
+
+function ajaxFix() {
+  /**
+   * 修复jquery在contentType='application/json'
+   * 但并没有返回值的问题
+   */
+  jQuery.ajaxSetup({
+    converters: {
+      "text json": function (response) {
+        response = jQuery.trim(response);
+        response = response.length > 0 ? response : null;
+        return jQuery.parseJSON(response);
+      }
+    }
+  });
+}
 
 /**
  * Reopen Ember-Data基类,拓展出beSaved方法,该方法主要用于将本地修改过属性的uncommitted状态的模型
@@ -22,6 +39,7 @@ function reopenEDModel(){
 
 export function initialize(/* container, application */) {
   reopenEDModel();
+  ajaxFix();
 }
 
 export default {

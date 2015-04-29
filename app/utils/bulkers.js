@@ -11,7 +11,6 @@ var Promise = Ember.RSVP.Promise;
 
 /**
  * 批量删除对象
- * TODO
  *  是否该操作需要排入Ember-Data的pending队列统一执行?
  * @param adapter
  * @param store
@@ -56,18 +55,29 @@ function _bulkOperation(adapter, store, type, records, operation) {
   var promise = adapter[operation](store, type, snapshots);
   var serializer = serializerForAdapter(store, adapter, type);
 
+  records = records.filterBy('isDirty', true);
+
+  records.forEach(function (record) {
+    record._inFlightAttributes = record._attributes;
+    record._attributes = Ember.create(null);
+    record.adapterWillCommit();
+  });
+
   promise = Promise.cast(promise, `bulk create records ${records}`);
   promise = _guard(promise, _bind(_objectIsAlive, store));
 
   return promise.then(function (adapterPayload) {
     return store._adapterRun(function () {
-      var payload = serializer.extract(store, type, adapterPayload, null, 'findMany');
-      Ember.assert("The response from a ${operation} must be an Array, not " + Ember.inspect(payload), Ember.typeOf(payload) === 'array');
+      var payload;
+      if (adapterPayload) {
+        payload = serializer.extract(store, type, adapterPayload, null, 'findMany');
+      }
+      records.invoke('adapterDidCommit');
 
-      records.forEach(function(record){
-        record.beSaved();
-      });
-      return store.pushMany(type, payload);
+      if (payload) {
+        store.pushMany(type, payload);
+      }
+      return records;
     });
   }, null, `DS: Extract payload of ${type}`);
 }
