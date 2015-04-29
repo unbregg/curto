@@ -59,16 +59,16 @@ export default DS.RESTAdapter.extend(BuildUrlMixin, {
    * @private
    */
     _serializeIntoHash(serializer, type, snapshots) {
-    var data = {};
+    //var data = {};
     if (Ember.isArray(snapshots) && Ember.isPresent(snapshots)) {
       var records = snapshots.map((snapshot)=> {
         var json = {};
         serializer.serializeIntoHash(json, type, snapshot, {includeId: true});
         return json;
       });
-      data[this.pathForType(type.typeKey)] = records;
+      //data[this.pathForType(type.typeKey)] = records;
+      return records;
     }
-    return data;
   },
   /**
    * findOne

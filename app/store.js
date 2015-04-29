@@ -17,7 +17,7 @@ import {
   //promiseManyArray
   } from './utils/ember-data-common';
 
-var get=Ember.get;
+var get = Ember.get;
 
 export default DS.Store.extend({
   /**
@@ -26,24 +26,35 @@ export default DS.Store.extend({
    * @param records
    */
     bulkDelete(records) {
-    var adapter, typeName = get(records, 'firstObject.typeKey');
+    var type, adapter, typeName = get(records, 'firstObject.constructor.typeKey');
     Ember.assert('BulkOperation: Invalid Arguments', typeName);
     adapter = this.adapterFor(typeName);
 
-    return promiseArray(_bulkDelete(adapter, this, typeName, records));
+    type = this.modelFor(typeName);
+    return promiseArray(_bulkDelete(adapter, this, type, records));
   },
   /**
    * 批量新建一组模型
+   * @WIP TODO 该接口的合理性有待讨论,如在场景
+   *
+   * var user1=store.createRecord('user');
+   * var user2=store.createRecord('user');
+   *
+   * store.bulkCreate([user1,user2]).then(function(users){
+   *    //在客户端新建并且未赋予user1,user2 id时,后端返回的数据将无法与user1,user2对应上.
+   * });
+   *
    * 如 store.bulkCreate('user',users);
    * @param records
    * @returns {*}
    */
     bulkCreate(records) {
-    var adapter, typeName = get(records, 'firstObject.typeKey');
+    var type, adapter, typeName = get(records, 'firstObject.constructor.typeKey');
     Ember.assert('BulkOperation: Invalid Arguments', typeName);
     adapter = this.adapterFor(typeName);
 
-    return promiseArray(_bulkCreate(adapter, this, typeName, records));
+    type = this.modelFor(typeName);
+    return promiseArray(_bulkCreate(adapter, this, type, records));
   },
   /**
    * 批量更新一组模型
@@ -52,11 +63,11 @@ export default DS.Store.extend({
    * @returns {*}
    */
     bulkUpdate(records) {
-    var adapter, typeName = get(records, 'firstObject.typeKey');
+    var type, adapter, typeName = get(records, 'firstObject.constructor.typeKey');
     Ember.assert('BulkOperation: Invalid Arguments', typeName);
     adapter = this.adapterFor(typeName);
-
-    return _bulkUpdate(adapter, this, typeName, records);
+    type = this.modelFor(typeName);
+    return _bulkUpdate(adapter, this, type, records);
   },
 
   /**

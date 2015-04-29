@@ -1,4 +1,4 @@
-/* jshint undef: true, unused: false */
+/* jshint undef: true, unused: false ,-W079*/
 import Ember from 'ember';
 import {
   _bind,
@@ -6,6 +6,8 @@ import {
   _objectIsAlive,
   serializerForAdapter
   } from "./ember-data-common";
+
+var Promise = Ember.RSVP.Promise;
 
 /**
  * 批量删除对象
@@ -60,8 +62,11 @@ function _bulkOperation(adapter, store, type, records, operation) {
   return promise.then(function (adapterPayload) {
     return store._adapterRun(function () {
       var payload = serializer.extract(store, type, adapterPayload, null, 'findMany');
-
       Ember.assert("The response from a ${operation} must be an Array, not " + Ember.inspect(payload), Ember.typeOf(payload) === 'array');
+
+      records.forEach(function(record){
+        record.beSaved();
+      });
       return store.pushMany(type, payload);
     });
   }, null, `DS: Extract payload of ${type}`);
