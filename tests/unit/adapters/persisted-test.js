@@ -16,7 +16,7 @@ function mockAjax(url, type, data) {
 }
 
 moduleFor('adapter:persisted', 'PersistedAdapter', {
-  setup: function () {
+  beforeEach: function () {
     var User;
     store = this.container.lookup('store:main');
 

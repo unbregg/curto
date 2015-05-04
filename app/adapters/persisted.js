@@ -1,6 +1,5 @@
 /* jshint undef: true, unused: false */
 
-
 import DS from 'ember-data';
 import BuildUrlMixin from '../mixins/build-url';
 import Ember from 'ember';

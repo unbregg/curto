@@ -9,7 +9,7 @@ module('AppExtInitializer', {
   beforeEach: function () {
     Ember.run(function () {
       application = Ember.Application.create();
-      container = application.__container__;
+      container = application.registry;
       application.deferReadiness();
       initialize(container, application);
 
@@ -24,7 +24,7 @@ module('AppExtInitializer', {
 
 test('to loaded.uncommitted when modify record and invoke beSaved to saved status', function (assert) {
   store = container.lookup('store:main');
-  var user=null;
+  var user = null;
 
   Ember.run(function () {
     user = store.push('userModel', {id: 'some_key', name: '123', age: '222'});
@@ -40,5 +40,5 @@ test('to loaded.uncommitted when modify record and invoke beSaved to saved statu
     user.beSaved();
   });
   assert.equal(user.get('currentState.stateName'), 'root.loaded.saved');
-  assert.equal(user.get('name'),'Another Name');
+  assert.equal(user.get('name'), 'Another Name');
 });

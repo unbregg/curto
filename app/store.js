@@ -11,10 +11,10 @@ import {
   _count,
   _isExists
   } from './utils/ember-data-finders';
+
 import {
   promiseObject,
   promiseArray,
-  //promiseManyArray
   } from './utils/ember-data-common';
 
 var get = Ember.get;
@@ -33,9 +33,10 @@ export default DS.Store.extend({
     type = this.modelFor(typeName);
     return promiseArray(_bulkDelete(adapter, this, type, records));
   },
+
   /**
    * 批量新建一组模型
-   * @WIP TODO 该接口的合理性有待讨论,如在场景
+   * @WIP TODO 该接口的合理性有待讨论,如使用场景等
    *
    * var user1=store.createRecord('user');
    * var user2=store.createRecord('user');
@@ -56,6 +57,7 @@ export default DS.Store.extend({
     type = this.modelFor(typeName);
     return promiseArray(_bulkCreate(adapter, this, type, records));
   },
+
   /**
    * 批量更新一组模型
    * 如 store.bulkUpdate('user',users);
@@ -66,6 +68,7 @@ export default DS.Store.extend({
     var type, adapter, typeName = get(records, 'firstObject.constructor.typeKey');
     Ember.assert('BulkOperation: Invalid Arguments', typeName);
     adapter = this.adapterFor(typeName);
+
     type = this.modelFor(typeName);
     return _bulkUpdate(adapter, this, type, records);
   },

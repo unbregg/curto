@@ -13,6 +13,11 @@
     "loader.js": "ember-cli/loader.js#3.2.0",
     "qunit": "~1.17.1",
     "ember-simple-auth": "0.8.0-beta.1",
-    "bootstrap": "~3.3"
+    "bootstrap": "~3.3",
+    "pretender": "^0.6.0",
+    "route-recognizer": "https://github.com/tildeio/route-recognizer.git#cc183c692f8e691227936028837c15b0910b1ea7"
+  },
+  "resolutions": {
+    "route-recognizer": "cc183c692f8e691227936028837c15b0910b1ea7"
   }
 }
