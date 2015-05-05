@@ -1,7 +1,7 @@
 import Ember from "ember";
 import { module, test } from 'qunit';
 import PersistedAdapter from 'curto/adapters/persisted';
-import startApp from '../../helpers/start-app';
+import startApp from 'curto/tests/helpers/start-app';
 import Pretender from 'pretender';
 var App, store, server;
 
