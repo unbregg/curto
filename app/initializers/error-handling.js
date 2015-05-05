@@ -39,12 +39,11 @@ function errorHanding() {
 
 /**
  * messenger extend
- *
  */
 function messengerExtend() {
   ['error', 'info', 'success'].forEach(function (operation) {
     Messenger[operation] = function (message) {
-      return Messenger.post({
+      return Messenger().post({
         type: operation,
         message: message,
         showCloseButton: true

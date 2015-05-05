@@ -1,6 +1,8 @@
-import PersistedAdapter from './persisted';
+import ApplicationAdapter from './application';
 
-export default PersistedAdapter.extend({
+
+//noinspection JSUnusedLocalSymbols,JSUnusedGlobalSymbols
+export default ApplicationAdapter.extend({
   /**
    *  User Login to Authentication
    * @param store
@@ -8,8 +10,8 @@ export default PersistedAdapter.extend({
    * @param credentials
    * @returns {Promise}
    */
-  login(store, type, credentials) {
-    return this.ajax(this.buildURL(type.typeKey, null, null, 'resourceOperation', 'login'), 'POST', { data: credentials});
+    login(store, type, credentials) {
+    return this.ajax(this.buildURL(type.typeKey, null, null, 'resourceOperation', 'login'), 'POST', {data: credentials});
   },
   /**
    * Logout User
@@ -18,7 +20,7 @@ export default PersistedAdapter.extend({
    * @param tokenId
    * @returns {*}
    */
-  logout(store, type, tokenId) {
-    return this.ajax(this.buildURL(type.typeKey, null, null, 'resourceOperation', 'logout'), 'POST', { data: {tokenId: tokenId}});
+    logout(store, type, tokenId) {
+    return this.ajax(this.buildURL(type.typeKey, null, null, 'resourceOperation', 'logout'), 'POST', {data: {tokenId: tokenId}});
   }
 });

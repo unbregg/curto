@@ -13,13 +13,12 @@ var StatusCodeMsg = {
  * TODO 对于传入未传入message的HTTP error进行I18n
  * @param code
  * @param message
- * @param handler
  * @constructor
  */
-function HTTPError(code, message, handler) {
+function HTTPError(code, message) {
+  EmberError.call(this);
   this.code = code;
   this.message = message || StatusCodeMsg[code] || StatusCodeMsg[500];
-  this.handler = handler;
 }
 
 HTTPError.prototype = create(EmberError.prototype);

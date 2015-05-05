@@ -6,6 +6,7 @@ import Ember from 'ember';
 import HTTPError from '../utils/errors';
 
 
+//noinspection JSUnusedLocalSymbols,JSUnusedGlobalSymbols
 export default DS.RESTAdapter.extend(BuildUrlMixin, {
   /**
    * Handle Business Error(With http code neither 200-300 nor 304)
@@ -13,8 +14,15 @@ export default DS.RESTAdapter.extend(BuildUrlMixin, {
    * 该钩子内部针对不同的HttpCode包装为不同的 Error并抛出.
    * @param jqXHR
    * @returns {*}
+   * @param responseText
+   * @param error
    */
-    ajaxError(jqXHR) {
+    ajaxError(jqXHR, responseText, error) {
+    if (jqXHR && jqXHR.status === 422) {
+      var message = Ember.get(jqXHR, 'responseJSON.error.message');
+      return new HTTPError(jqXHR.status, message);
+    }
+
     return new HTTPError(jqXHR.status);
   },
   /**
@@ -56,15 +64,12 @@ export default DS.RESTAdapter.extend(BuildUrlMixin, {
    * @private
    */
     _serializeIntoHash(serializer, type, snapshots) {
-    //var data = {};
     if (Ember.isArray(snapshots) && Ember.isPresent(snapshots)) {
-      var records = snapshots.map((snapshot)=> {
+      return snapshots.map((snapshot)=> {
         var json = {};
         serializer.serializeIntoHash(json, type, snapshot, {includeId: true});
         return json;
       });
-      //data[this.pathForType(type.typeKey)] = records;
-      return records;
     }
   },
   /**

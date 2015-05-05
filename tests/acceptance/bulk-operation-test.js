@@ -1,6 +1,5 @@
 import Ember from "ember";
 import { module, test } from 'qunit';
-import PersistedAdapter from 'curto/adapters/persisted';
 import startApp from 'curto/tests/helpers/start-app';
 import Pretender from 'pretender';
 var App, store, server;
@@ -16,13 +15,16 @@ module('An Integration test', {
       this.post('/userModels/bulkCreate', function (request) {
         return [200, {"Content-Type": "application/json"}, JSON.stringify({userModels: p(request)})];
       });
+
       this.put('/userModels/bulkUpdate', function (request) {
         var requestBody = p(request);
+
         requestBody.forEach(function (userModel) {
           userModel.name = 'processed';
         });
         return [200, {"Content-Type": "application/json"}, JSON.stringify({userModels: requestBody})];
       });
+
       this.delete('/userModels/bulkDelete', function (/*request*/) {
         return [204, {"Content-Type": "application/json"}];
       });
@@ -33,10 +35,7 @@ module('An Integration test', {
       name: DS.attr(),
       age: DS.attr()
     });
-
-    var UserAdapter = PersistedAdapter.extend();
     App.registry.register('model:userModel', User);
-    App.registry.register('adapter:userModel', UserAdapter);
   },
   afterEach: function () {
     Ember.run(App, App.destroy);
@@ -72,7 +71,6 @@ test("bulk create", function (assert) {
 test("bulk update", function (assert) {
   assert.expect(4);
   var user1, user2;
-
   Ember.run(function () {
     user1 = store.push('userModel', {id: '1', name: '111'});
     user2 = store.push('userModel', {id: '2', name: '222'});
