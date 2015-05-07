@@ -1,10 +1,43 @@
-## 约定说明文档
+# 约定说明文档
+
+@[Ember|Ember-CLI|Ember-Addons]
+
+-----
+
+[TOC]
+
+-----
+
+
+###项目环境搭建
+
+> **Ember-CLI** 是一款Ember命令行工具，基于 **Broccoli**的构建工具，内建了项目代码结构规范，提供了快速的资源编译功能。
+
+####Ember-CLI安装
+
+
+- 安装`Node.js`
+	对于Nodejs的版本选择可以有 [NODE.JS](https://nodejs.org/) | [IO.JS](https://iojs.org/en/index.html),可以选择其中一个的最新版本进行安装即可.
+
+- 安装`git`
+	Ember-CLI中使用[Bower](http://bower.io/)作为前端资源管理，Bower在某些场景下可能会使用git载入`github`的资源 [git安装指南](http://jingyan.baidu.com/article/bea41d4373e9bdb4c41be669.html)
+
+- 安装`Bower`,在命令行窗口中敲入 `npm install -g bower`进行Bower包的安装
+
+- 安装`Ember-CLI`，在命令行窗口中敲入`npm install -g ember-cli`进行Ember-cli构建工具安装
+
+安装完以上的依赖后，Ember-CLI构建工具就已就绪，即可开始前端项目构建
+
+**[Ember-CLI详细使用指南](http://www.ember-cli.com/)**
+
+
+
 >**声明：该说明文档详细说明了系统提供的基础功能模块，前端与后端REST请求规范，前端与后端数据通信格式标准，以及前端和后端统一查询参数，基于Ember-Data的扩展等等功能，随着技术功能的增长以及变化，该文档会随之发生改变**
 ***
 >开发声明：约定了前后端的数据、REST、查询参数等约定，需要后端实现对应技术要点
 >数据通讯说明：该文档所描述的数据通讯非标准规范定义，如果需要实现OASIS所规定的[OData](https://www.odata.org)标准，可以参考详细`OData`说明
 
-#### 目录结构
+#### 目录结构(详见[Folrder-Layout](http://www.ember-cli.com/#folder-layout))
 ```
 app
 ├── adapters
@@ -206,6 +239,36 @@ metadata:{
 ##### Pagination With Filter
 > Todo
 
+#### 异常处理
+> 项目目前提供了对于Ajax异常的全局捕捉处理，对于进入路由时发生的HTTP异常，将在错误展示页面中显示异常信息(本机制由Ember负责，不冒泡至全局异常处理)
+>
+> 对于在交互期间引起的异常，如果代码未进行异常捕获，已经冒泡至全局异常管理器后，视窗右下角将弹出错误提示 （使用`Messenger`组件）
+
+```js
+	//<button {{action "save"}}>saveUser</button>
+	
+	//..Some Controller
+	
+	actions:{
+		save:function(user){
+			//对于未catch的情况，如果请求失败，将统一冒泡至全局统一异常处理器处理
+			user.save();
+			//如果异常已由代码手动捕获，那么异常将不会冒泡至全局统一异常处理器
+			user.save().catch(function(e){
+				//do something you want
+			});
+			//如果异常已由代码手动捕获后，还希望全局异常处理器处理该异常，则继续将异常抛出即可
+			user.save().catch(function(e){
+				//do something you want
+				throw e;
+			});
+
+		}
+	}	
+
+```
+
+
 #### 路由视图状态保存
 > Todo
 
@@ -225,7 +288,13 @@ modelType 为传进去到模态框的参数，可以有多个参数
  this.send('openPopup', popupName, selection);
 ```
 ##### Notification
-> Todo
+> 项目采用`Messenger`作为消息提示组件，并拓展出`info`,`error`,`success`接口，使用方式为
+```js
+	//视窗右下角将弹出窗口显示对应的信息
+	Messenger.info(msg)
+	Messenger.error(msg)
+	Messenger.success(msg)	
+``` 
 
 ##### Grid
 > Todo
@@ -302,9 +371,6 @@ modelType 为传进去到模态框的参数，可以有多个参数
 #### 基础增删改查Blueprint
 > Todo
 
-#### 异常处理
-> Todo
-
 #### 国际化
 > Todo 待讨论和设计
 
@@ -314,6 +380,77 @@ var locale = {
  //locale path
 };
 ```
+
+#### ES6语法规范
+Ember-CLI 内置Babel作为ES6-ES5的语法解析器，目前建议使用的语法包括
+
+```js
+//箭头符
+var odds = evens.map(v => v + 1);
+var nums = evens.map((v, i) => v + i);
+
+// Statement bodies
+nums.forEach(v => {
+  if (v % 5 === 0)
+    fives.push(v);
+});
+
+//字符模板
+var a='hello'
+//注意，这不是单引号，这是esc下面的那个键。
+console.log(`${a} world`); => 'hello world'
+
+//默认值、REST
+function f(x, y=12) {
+  // y is 12 if not passed (or passed as undefined)
+  return x + y;
+}
+f(3) == 15
+
+function f(x, ...y) {
+  // y is an Array
+  return x * y.length;
+}
+f(3, "hello", true) == 6
+
+function f(x, y, z) {
+  return x + y + z;
+}
+// Pass each elem of array as argument
+f(...[1,2,3]) == 6
+
+//常见场景如
+export defualt Ember.ObjectController.extend({
+	init:function(){
+		this._super.apply(this,arguments);
+	}
+	//等价于
+	init(){
+		this._super(...arguments);
+	}
+})
+
+//LET|CONST
+
+function f() {
+  {
+    let x;
+    {
+      // okay, block scoped name
+      const x = "sneaky";
+      // error, const
+      x = "foo";
+    }
+    // error, already declared in block
+    let x = "inner";
+  }
+}
+
+```
+
+
+
+
 #### 路由设计
 > Todo 待讨论和设计
 
