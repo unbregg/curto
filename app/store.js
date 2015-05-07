@@ -5,7 +5,8 @@ import {
   _bulkCreate,
   _bulkUpdate
   } from './utils/bulkers';
-
+import xFind from 'curto/mixins/x-find-for-store';
+import commit from 'curto/mixins/commit-for-store';
 import {
   _findOne,
   _count,
@@ -19,7 +20,7 @@ import {
 
 var get = Ember.get;
 
-export default DS.Store.extend({
+export default DS.Store.extend(xFind,commit,{
   /**
    * 批量删除一组模型.
    * 如 store.bulkDelete('user',users);

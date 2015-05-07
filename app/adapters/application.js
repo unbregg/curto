@@ -4,10 +4,11 @@ import DS from 'ember-data';
 import BuildUrlMixin from '../mixins/build-url';
 import Ember from 'ember';
 import HTTPError from '../utils/errors';
-
+import XFind from '../mixins/x-find-for-adapter';
+import Commit from '../mixins/commit-for-adapter';
 
 //noinspection JSUnusedLocalSymbols,JSUnusedGlobalSymbols
-export default DS.RESTAdapter.extend(BuildUrlMixin, {
+export default DS.RESTAdapter.extend(BuildUrlMixin, XFind,Commit,{
   /**
    * Handle Business Error(With http code neither 200-300 nor 304)
    * 所有通过Ember-Data发起的请求,如果后端返回的HttpCode不处于200-300区间,也不是304,则会进入此钩子
@@ -64,14 +65,20 @@ export default DS.RESTAdapter.extend(BuildUrlMixin, {
    * @private
    */
     _serializeIntoHash(serializer, type, snapshots) {
-    if (Ember.isArray(snapshots) && Ember.isPresent(snapshots)) {
-      return snapshots.map((snapshot)=> {
         var json = {};
-        serializer.serializeIntoHash(json, type, snapshot, {includeId: true});
-        return json;
-      });
-    }
-  },
+        if (Ember.isArray(snapshots) && Ember.isPresent(snapshots)) {
+
+            return snapshots.map((snapshot)=> {
+                json = {};
+                serializer.serializeIntoHash(json, type, snapshot, {includeId: true});
+                return json;
+            });
+            //data[this.pathForType(type.typeKey)] = records;
+        } else {
+            serializer.serializeIntoHash(json, type, snapshots, {includeId: true});
+            return json;
+        }
+    },
   /**
    * findOne
    * @param store
